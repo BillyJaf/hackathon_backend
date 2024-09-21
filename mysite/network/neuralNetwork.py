@@ -116,7 +116,7 @@ def main(dayData):
     maxOutput = torch.tensor(1, dtype=torch.float32)
 
     # Perform optimisation with 1000 epochs
-    for i in range(1000):
+    for i in range(10000):
         ## Reset the gradient
         optimiser.zero_grad()
 
@@ -130,11 +130,14 @@ def main(dayData):
         loss.backward()
         optimiser.step()
 
-    inputsOutput = inputs.detach().squeeze().tolist()
-    boundOutputs = [bound(x) for x in inputsOutput]
+    inputsOutput = inputs.squeeze().tolist()
+    ## Convert the data to frontend form:
+    for i in range(len(inputsOutput)):
+        inputsOutput[i] = bound(inputsOutput[i])
+        if (not (i == 3 or i == 9)):
+            inputsOutput[i] = round(inputsOutput[i])
 
-    print(inputsOutput)
-    return [boundOutputs, prediction.item()]
+    return [inputsOutput, prediction.item()]
 
 def sigmoid(x):
     return 1/(1 + np.exp(-x))
@@ -144,7 +147,7 @@ def bound(x):
         return 1
     if (x < 0):
         return 0
-    return round(x)
+    return x
 
 def pointwiseAdd(list1, list2):
     for i in range(len(list1)):
