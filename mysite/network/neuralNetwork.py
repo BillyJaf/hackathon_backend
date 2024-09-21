@@ -60,7 +60,7 @@ def main(dayData):
     ## Adam optimisation for stochastic gradient descent
     ## High learning rate on small input size, minimum learning rate of 0.001 (default optim lr)
     ## lr=max(0.1/numDays, 0.001)
-    optimiser = optim.Adam(net.parameters())
+    optimiser = optim.Adam(net.parameters(), lr=0.005)
 
     ## Default prediction score
     prediction =  torch.tensor(0.5, dtype=torch.float32)
@@ -69,20 +69,16 @@ def main(dayData):
     if (numDays > 1): 
         for day in dayData[:-1]:
             ## 1000 epochs:
-            for i in range(10000):
+            for i in range(5000):
                 ## Reset the gradient
                 optimiser.zero_grad()
 
                 ## Run the input values through the net
                 output = net(torch.tensor(day["x"], dtype=torch.float32))
-                if (i == 0):
-                    print(output)
-                    print(day["y"])
-                    print(torch.tensor(day["y"], dtype=torch.float32))
 
 
                 ## Calculate the loss given the user input
-                loss = criterion(output, torch.tensor(day["y"], dtype=torch.float32))
+                loss = criterion(output, torch.tensor([day["y"]], dtype=torch.float32))
 
                 ## Back propagate and update
                 loss.backward()
@@ -92,19 +88,19 @@ def main(dayData):
         prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
 
         ## Now feed the most recent day after this prediction
-        for i in range(10000):
+        for i in range(5000):
             optimiser.zero_grad()
             output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
-            loss = criterion(output, torch.tensor(dayData[-1]["y"], dtype=torch.float32))
+            loss = criterion(output, torch.tensor([dayData[-1]["y"]], dtype=torch.float32))
             loss.backward()
             optimiser.step()
     
     ## Otherwise, this is the first input, maintain the default prediction of 0.5
     else:
-        for i in range(10000):
+        for i in range(5000):
             optimiser.zero_grad()
             output = net(torch.tensor(dayData[0]["x"], dtype=torch.float32))
-            loss = criterion(output, torch.tensor(dayData[0]["y"], dtype=torch.float32))
+            loss = criterion(output, torch.tensor([dayData[0]["y"]], dtype=torch.float32))
             loss.backward()
             optimiser.step()
 
@@ -118,7 +114,7 @@ def main(dayData):
 
     # Reset the optimiser with a larger lr (inrelation to the epoch count)
     # Note that now the optimisation is for the input values, not the output
-    optimiser = optim.Adam([inputs], lr=0.001)
+    optimiser = optim.Adam([inputs], lr=0.005)
 
     # Define a loss function (mean squared error between model output and desired output)
     criterion = torch.nn.MSELoss()
