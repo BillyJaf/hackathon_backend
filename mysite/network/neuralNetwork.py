@@ -60,7 +60,7 @@ def main(dayData):
     ## Adam optimisation for stochastic gradient descent
     ## High learning rate on small input size, minimum learning rate of 0.001 (default optim lr)
     ## lr=max(0.1/numDays, 0.001)
-    optimiser = optim.Adam(net.parameters(), lr=0.001)
+    optimiser = optim.Adam(net.parameters(), lr=0.01)
 
     ## Default prediction score
     prediction =  torch.tensor(0.5, dtype=torch.float32)
@@ -109,7 +109,8 @@ def main(dayData):
     ## Create the inverse model to optimise for the input values:
 
     # Start with random input values:
-    inputs = torch.randn(1, inputSize, requires_grad=True)
+    inputs = torch.full((1, inputSize), 0.5, requires_grad=True)
+    # inputs = torch.randn(1, inputSize, requires_grad=True)
 
     # Reset the optimiser with a larger lr (inrelation to the epoch count)
     # Note that now the optimisation is for the input values, not the output
