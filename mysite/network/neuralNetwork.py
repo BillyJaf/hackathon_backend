@@ -51,7 +51,7 @@ def main(dayData):
     if (numDays == 0):
         raise Exception("No input data provided.") 
     
-    inputSize = dayData[0]["x"].length
+    inputSize = len(dayData[0]["x"])
     net = NeuralNetwork(inputSize)
 
     ## Mean-Squared-Error
@@ -65,7 +65,7 @@ def main(dayData):
     prediction = 0.5
 
     ## If there is more than one day of data, predict how the user feels
-    if (len(dayData) > 1): 
+    if (numDays > 1): 
         for day in dayData[:-1]:
             ## Reset the gradient
             optimiser.zero_grad()
