@@ -2,4 +2,4 @@
 djangorestframework==3.15.1
 torch==2.3.1+cpu
 gunicorn==23.0.0
-numpy==1.21.5
+numpy==2.1.1
