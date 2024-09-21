@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from .serializer import HealthEntrySerializer
+from mysite.network.neuralNetwork import main
+from rest_framework.exceptions import ValidationError
 
 #commands
 #pip install djangorestframework
@@ -12,13 +14,15 @@ from .serializer import HealthEntrySerializer
 class API(APIView):
     def get(self, request): 
         health_entries = request.data
+        if not health_entries:
+            raise ValidationError("No data provided")
+            # return Response(status=status.HTTP_400_BAD_REQUEST)
         serialized_entries = []
         for entry in health_entries:
             serializer = HealthEntrySerializer(data=entry)
             serialized_entries.append(serializer.data)
         result = main(serialized_entries)  #obtain 
         # # This handles a GET API call
-        # result = main() #TODO - fix 
         response_data = {
             'actions': result[0], #list of numbers associated with each action 
             'prediction': result[1]
@@ -37,6 +41,9 @@ class API(APIView):
             "skinFeelRating": response_data["prediction"]
         }
         return Response(new_health_entry, status=status.HTTP_200_OK)
+    
+
+
     # def post(self, request):
     #     # This handles a POST API call 
     #     health_entries = request.data
