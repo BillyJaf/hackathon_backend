@@ -137,7 +137,7 @@ def main(dayData):
         optimiser.step()
 
         inputsOutput = inputs.detach().squeeze().tolist()
-        sigmoidOutputs = map(sigmoid, inputsOutput)
+        sigmoidOutputs = [sigmoid(x) for x in inputsOutput]
 
     return [sigmoidOutputs, prediction.item()]
 
