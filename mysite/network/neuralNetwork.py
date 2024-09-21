@@ -69,7 +69,7 @@ def main(dayData):
     if (numDays > 1): 
         for day in dayData[:-1]:
             ## 1000 epochs:
-            for i in range(1000):
+            for i in range(100000):
                 ## Reset the gradient
                 optimiser.zero_grad()
 
@@ -87,7 +87,7 @@ def main(dayData):
         prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
 
         ## Now feed the most recent day after this prediction
-        for i in range(1000):
+        for i in range(100000):
             optimiser.zero_grad()
             output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
             loss = criterion(output, torch.tensor(dayData[-1]["y"], dtype=torch.float32))
@@ -96,7 +96,7 @@ def main(dayData):
     
     ## Otherwise, this is the first input, maintain the default prediction of 0.5
     else:
-        for i in range(1000):
+        for i in range(100000):
             optimiser.zero_grad()
             output = net(torch.tensor(dayData[0]["x"], dtype=torch.float32))
             loss = criterion(output, torch.tensor(dayData[0]["y"], dtype=torch.float32))
@@ -121,8 +121,8 @@ def main(dayData):
      # Target output (1 in our case as we want to maximise)
     maxOutput = torch.tensor([1], dtype=torch.float32)
 
-    # Perform optimisation with 1000 epochs
-    for i in range(1000):
+    # Perform optimisation with 10000 epochs
+    for i in range(10000):
         ## Reset the gradient
         optimiser.zero_grad()
 
