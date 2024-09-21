@@ -1,4 +1,7 @@
 from neuralNetwork import main
+import secrets
+
+print(secrets.token_urlsafe(50))
 
 
 print(main([

@@ -133,7 +133,7 @@ def main(dayData):
     inputsOutput = inputs.squeeze().tolist()
     ## Convert the data to frontend form:
     for i in range(len(inputsOutput)):
-        inputsOutput[i] = bound(inputsOutput[i])
+        inputsOutput[i] = float(bound(inputsOutput[i]))
         if (not (i == 3 or i == 9)):
             inputsOutput[i] = float(round(inputsOutput[i]))
 
