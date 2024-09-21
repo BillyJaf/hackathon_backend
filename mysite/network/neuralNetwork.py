@@ -111,7 +111,7 @@ def main(dayData):
     optimiser = optim.Adam([inputs], lr=0.01)
 
     # Define a loss function (mean squared error between model output and desired output)
-    loss = torch.nn.MSELoss()
+    criterion = torch.nn.MSELoss()
 
      # Target output (1 in our case as we want to maximise)
     maxOutput = torch.tensor([1], dtype=torch.float32)
@@ -125,7 +125,7 @@ def main(dayData):
         output = net(inputs)
         
         ## Calculate the loss from the current inputs
-        loss = loss(output, maxOutput)
+        loss = criterion(output, maxOutput)
 
         ## Back propagate and update
         loss.backward()
