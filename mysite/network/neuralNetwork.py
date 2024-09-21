@@ -74,7 +74,7 @@ def main(dayData):
                 optimiser.zero_grad()
 
                 ## Run the input values through the net
-                output = net(torch.tensor(day["x"], dtype=torch.float32))
+                output = net(torch.tensor(day["x"], dtype=torch.float32)).squeeze()
 
 
                 ## Calculate the loss given the user input
@@ -85,12 +85,12 @@ def main(dayData):
                 optimiser.step()
         
         ## Make a prediction on how you should have felt after your days inputs
-        prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
+        prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32)).squeeze()
 
         ## Now feed the most recent day after this prediction
         for i in range(5000):
             optimiser.zero_grad()
-            output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
+            output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32)).squeeze()
             loss = criterion(output, torch.tensor([dayData[-1]["y"]], dtype=torch.float32))
             loss.backward()
             optimiser.step()
@@ -99,7 +99,7 @@ def main(dayData):
     else:
         for i in range(5000):
             optimiser.zero_grad()
-            output = net(torch.tensor(dayData[0]["x"], dtype=torch.float32))
+            output = net(torch.tensor(dayData[0]["x"], dtype=torch.float32)).squeeze()
             loss = criterion(output, torch.tensor([dayData[0]["y"]], dtype=torch.float32))
             loss.backward()
             optimiser.step()
