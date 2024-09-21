@@ -71,30 +71,30 @@ def main(dayData):
             optimiser.zero_grad()
 
             ## Run the input values through the net
-            output = net(torch.tensor(day["x"]))
+            output = net(torch.tensor(day["x"], dtype=torch.float32))
 
             ## Calculate the loss given the user input
-            loss = criterion(output, torch.tensor(day["y"]))
+            loss = criterion(output, torch.tensor(day["y"], dtype=torch.float32))
 
             ## Back propagate and update
             loss.backward()
             optimiser.step()
         
          ## Make a prediction on how you should have felt after your days inputs
-        prediction = net(torch.tensor(dayData[-1]["x"]))
+        prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
 
         ## Now feed the most recent day after this prediction
         optimiser.zero_grad()
-        output = net(torch.tensor(dayData[-1]["x"]))
-        loss = criterion(output, torch.tensor(dayData[-1]["y"]))
+        output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
+        loss = criterion(output, torch.tensor(dayData[-1]["y"], dtype=torch.float32))
         loss.backward()
         optimiser.step()
     
     ## Otherwise, this is the first input, maintain the default prediction of 0.5
     else:
         optimiser.zero_grad()
-        output = net(torch.tensor(dayData[0]["x"]))
-        loss = criterion(output, torch.tensor(dayData[0]["y"]))
+        output = net(torch.tensor(dayData[0]["x"], dtype=torch.float32))
+        loss = criterion(output, torch.tensor(dayData[0]["y"], dtype=torch.float32))
         loss.backward()
         optimiser.step()
 
@@ -114,7 +114,7 @@ def main(dayData):
     loss = torch.nn.MSELoss()
 
      # Target output (1 in our case as we want to maximise)
-    maxOutput = torch.tensor([1])
+    maxOutput = torch.tensor([1], dtype=torch.float32)
 
     # Perform optimisation with 1000 epochs
     for i in range(1000):
