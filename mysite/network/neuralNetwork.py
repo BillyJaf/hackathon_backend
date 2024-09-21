@@ -67,8 +67,9 @@ def main(dayData):
 
     ## If there is more than one day of data, predict how the user feels
     if (numDays > 1): 
-        for i in range(1000):
-            for day in dayData[:-1]:
+        for day in dayData[:-1]:
+            ## 1000 epochs:
+            for i in range(1000):
                 ## Reset the gradient
                 optimiser.zero_grad()
 
@@ -86,11 +87,12 @@ def main(dayData):
         prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
 
         ## Now feed the most recent day after this prediction
-        optimiser.zero_grad()
-        output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
-        loss = criterion(output, torch.tensor(dayData[-1]["y"], dtype=torch.float32))
-        loss.backward()
-        optimiser.step()
+        for i in range(1000):
+            optimiser.zero_grad()
+            output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
+            loss = criterion(output, torch.tensor(dayData[-1]["y"], dtype=torch.float32))
+            loss.backward()
+            optimiser.step()
     
     ## Otherwise, this is the first input, maintain the default prediction of 0.5
     else:
