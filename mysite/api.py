@@ -12,7 +12,7 @@ from rest_framework.exceptions import ValidationError
 #Chethin calls get (to get data) and set (to send data)
 #I call Billys function in get API
 class API(APIView):
-    def get(self, request): 
+    def post(self, request): 
         health_entries = request.data
         if not health_entries:
             raise ValidationError("No data provided")
