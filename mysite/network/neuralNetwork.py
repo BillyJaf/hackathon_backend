@@ -59,44 +59,46 @@ def main(dayData):
 
     ## Adam optimisation for stochastic gradient descent
     ## High learning rate on small input size, minimum learning rate of 0.001 (default optim lr)
-    optimiser = optim.Adam(net.parameters(), lr=max(0.1/numDays, 0.001))
+    ## lr=max(0.1/numDays, 0.001)
+    optimiser = optim.Adam(net.parameters())
 
     ## Default prediction score
     prediction = 0.5
 
     ## If there is more than one day of data, predict how the user feels
-    if (numDays > 1): 
-        for day in dayData[:-1]:
-            ## Reset the gradient
+    for i in range(1000):
+        if (numDays > 1): 
+            for day in dayData[:-1]:
+                ## Reset the gradient
+                optimiser.zero_grad()
+
+                ## Run the input values through the net
+                output = net(torch.tensor(day["x"], dtype=torch.float32))
+
+                ## Calculate the loss given the user input
+                loss = criterion(output, torch.tensor(day["y"], dtype=torch.float32))
+
+                ## Back propagate and update
+                loss.backward()
+                optimiser.step()
+            
+            ## Make a prediction on how you should have felt after your days inputs
+            prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
+
+            ## Now feed the most recent day after this prediction
             optimiser.zero_grad()
-
-            ## Run the input values through the net
-            output = net(torch.tensor(day["x"], dtype=torch.float32))
-
-            ## Calculate the loss given the user input
-            loss = criterion(output, torch.tensor(day["y"], dtype=torch.float32))
-
-            ## Back propagate and update
+            output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
+            loss = criterion(output, torch.tensor(dayData[-1]["y"], dtype=torch.float32))
             loss.backward()
             optimiser.step()
         
-         ## Make a prediction on how you should have felt after your days inputs
-        prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
-
-        ## Now feed the most recent day after this prediction
-        optimiser.zero_grad()
-        output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
-        loss = criterion(output, torch.tensor(dayData[-1]["y"], dtype=torch.float32))
-        loss.backward()
-        optimiser.step()
-    
-    ## Otherwise, this is the first input, maintain the default prediction of 0.5
-    else:
-        optimiser.zero_grad()
-        output = net(torch.tensor(dayData[0]["x"], dtype=torch.float32))
-        loss = criterion(output, torch.tensor(dayData[0]["y"], dtype=torch.float32))
-        loss.backward()
-        optimiser.step()
+        ## Otherwise, this is the first input, maintain the default prediction of 0.5
+        else:
+            optimiser.zero_grad()
+            output = net(torch.tensor(dayData[0]["x"], dtype=torch.float32))
+            loss = criterion(output, torch.tensor(dayData[0]["y"], dtype=torch.float32))
+            loss.backward()
+            optimiser.step()
 
 
 
@@ -108,7 +110,7 @@ def main(dayData):
 
     # Reset the optimiser with a larger lr (inrelation to the epoch count)
     # Note that now the optimisation is for the input values, not the output
-    optimiser = optim.Adam([inputs], lr=0.01)
+    optimiser = optim.Adam([inputs], lr=0.001)
 
     # Define a loss function (mean squared error between model output and desired output)
     criterion = torch.nn.MSELoss()
