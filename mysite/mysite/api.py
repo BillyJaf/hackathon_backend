@@ -9,35 +9,40 @@ from .serializer import HealthEntrySerializer
 
 #Chethin calls get (to get data) and set (to send data)
 #I call Billys function in get API
-class ModelAPIView(APIView):
+class API(APIView):
     def get(self, request): 
-        # This handles a GET API call
-        result = main() #TODO - fix 
-        response_data = {
-            'actions': result[0], #list of numbers associated with each action 
-            'prediction': result[1]
-        }
-        health_entry = {
-            "id": null,
-            "cream1": actions[0],
-            "cream2": actions[1],
-            "tokHotShower": actions[2],
-            "relativeHumidity": actions[3],
-            "stress": actions[4],
-            "facewash1": actions[5],
-            "facewash2": actions[6],
-            "makeup": actions[7],
-            "soap": actions[8],
-            "hoursInside": actions[9],
-            "skinFeelRating": prediction
-        }
-        return Response(health_entry, status=status.HTTP_200_OK)
-    def post(self, request):
-        # This handles a POST API call 
         health_entries = request.data
         serialized_entries = []
         for entry in health_entries:
             serializer = HealthEntrySerializer(data=entry)
             serialized_entries.append(serializer.data)
-        main(serialized_entries)
-        return Response(status=status.HTTP_200_OK)  #TODO - add check for bad request 
+        result = main(serialized_entries)  #obtain 
+        # # This handles a GET API call
+        # result = main() #TODO - fix 
+        response_data = {
+            'actions': result[0], #list of numbers associated with each action 
+            'prediction': result[1]
+        }
+        new_health_entry = {
+            "cream1": response_data["actions"][0],
+            "cream2": response_data["actions"][1],
+            "tookHotShower": response_data["actions"][2],
+            "relativeHumidity": response_data["actions"][3],
+            "stress": response_data["actions"][4],
+            "facewash1": response_data["actions"][5],
+            "facewash2": response_data["actions"][6],
+            "makeup": response_data["actions"][7],
+            "soap": response_data["actions"][8],
+            "hoursInside": response_data["actions"][9],
+            "skinFeelRating": response_data["prediction"]
+        }
+        return Response(new_health_entry, status=status.HTTP_200_OK)
+    # def post(self, request):
+    #     # This handles a POST API call 
+    #     health_entries = request.data
+    #     serialized_entries = []
+    #     for entry in health_entries:
+    #         serializer = HealthEntrySerializer(data=entry)
+    #         serialized_entries.append(serializer.data)
+    #     main(serialized_entries)
+    #     return Response(status=status.HTTP_200_OK)  #TODO - add check for bad request 

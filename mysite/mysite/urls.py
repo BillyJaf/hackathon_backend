@@ -15,9 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api import ModelAPIView  # Import your view
+from mysite.api import API  # Import your view
 
 urlpatterns = [
     path('admin/', admin.site.urls), #Need
-    path('/', ModelAPIView.as_view(), ModelAPIView) #host on own port 
+    path('serverdata/', API.as_view()) #host on own port 
 ]
