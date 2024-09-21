@@ -71,7 +71,7 @@ def main(dayData):
             optimiser.zero_grad()
 
             ## Run the input values through the net
-            output = net(day["x"])
+            output = net(torch.tensor(day["x"]))
 
             ## Calculate the loss given the user input
             loss = criterion(output, day["y"])
@@ -81,20 +81,20 @@ def main(dayData):
             optimiser.step()
         
          ## Make a prediction on how you should have felt after your days inputs
-        prediction = net(dayData[-1]["x"])
+        prediction = net(torch.tensor(dayData[-1]["x"]))
 
         ## Now feed the most recent day after this prediction
         optimiser.zero_grad()
-        output = net(dayData[-1]["x"])
-        loss = criterion(output, dayData[-1]["y"])
+        output = net(torch.tensor(dayData[-1]["x"]))
+        loss = criterion(output, torch.tensor(dayData[-1]["y"]))
         loss.backward()
         optimiser.step()
     
     ## Otherwise, this is the first input, maintain the default prediction of 0.5
     else:
         optimiser.zero_grad()
-        output = net(dayData[0]["x"])
-        loss = criterion(output, dayData[0]["y"])
+        output = net(torch.tensor(dayData[0]["x"]))
+        loss = criterion(output, torch.tensor(dayData[0]["y"]))
         loss.backward()
         optimiser.step()
 
