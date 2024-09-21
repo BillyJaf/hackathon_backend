@@ -58,8 +58,6 @@ def main(dayData):
     criterion = nn.MSELoss()
 
     ## Adam optimisation for stochastic gradient descent
-    ## High learning rate on small input size, minimum learning rate of 0.001 (default optim lr)
-    ## lr=max(0.1/numDays, 0.001)
     optimiser = optim.Adam(net.parameters(), lr=0.001)
 
     ## Default prediction score
@@ -83,21 +81,6 @@ def main(dayData):
     
     ## Make a prediction on how you should have felt after your days inputs
     prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
-
-    # for i in range(10000):
-    #     ## Reset the gradient
-    #     optimiser.zero_grad()
-
-    #     ## Run the input values through the net
-    #     output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32)).squeeze()
-
-    #     ## Calculate the loss given the user input
-    #     loss = criterion(output, torch.tensor(dayData[-1]["y"], dtype=torch.float32))
-
-    #     ## Back propagate and update
-    #     loss.backward()
-    #     optimiser.step()
-
 
     ## Create the inverse model to optimise for the input values:
 
