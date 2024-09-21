@@ -1,9 +1,6 @@
 from neuralNetwork import main
 import secrets
 
-print(secrets.token_urlsafe(50))
-
-
 print(main([
 {
     "x": [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
