@@ -135,7 +135,7 @@ def main(dayData):
     for i in range(len(inputsOutput)):
         inputsOutput[i] = bound(inputsOutput[i])
         if (not (i == 3 or i == 9)):
-            inputsOutput[i] = round(inputsOutput[i])
+            inputsOutput[i] = float(round(inputsOutput[i]))
 
     return [inputsOutput, prediction.item()]
 
@@ -148,9 +148,4 @@ def bound(x):
     if (x < 0):
         return 0
     return x
-
-def pointwiseAdd(list1, list2):
-    for i in range(len(list1)):
-        list1[i] += list2[i]
-    return list1
 
