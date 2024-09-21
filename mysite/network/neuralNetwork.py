@@ -1,5 +1,5 @@
 import torch
-from typing import List, Dict
+import numpy as np 
 from torch import nn
 from torch import optim
 
@@ -136,5 +136,11 @@ def main(dayData):
         loss.backward()
         optimiser.step()
 
-    return [inputs.detach().squeeze().tolist(), prediction.item()]
+        inputsOutput = inputs.detach().squeeze().tolist()
+        sigmoidOutputs = map(sigmoid, inputsOutput)
+
+    return [sigmoidOutputs, prediction.item()]
+
+def sigmoid(x):
+    return 1/(1 + np.exp(-x))
 
