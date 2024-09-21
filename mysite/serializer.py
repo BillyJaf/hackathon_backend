@@ -1,6 +1,4 @@
-# serializers.py
 from rest_framework import serializers
-# myapp/serializers.py
 from rest_framework import serializers
 
 class HealthEntrySerializer(serializers.Serializer):
@@ -17,7 +15,7 @@ class HealthEntrySerializer(serializers.Serializer):
     skinFeelRating = serializers.FloatField()
 
     def to_representation(self, instance):
-        # Convert to the required format: list of floats and skinFeelRating
+        #convert to a data representation needed for the model 
         actionsTaken = [
             instance['cream1'],
             instance['cream2'],
@@ -30,8 +28,7 @@ class HealthEntrySerializer(serializers.Serializer):
             instance['soap'],
             instance['hoursInside'],
         ]
-        
-        return {
+        return { #dictonary needed by model 
             'x': actionsTaken,
             'y': instance['skinFeelRating']
         }
