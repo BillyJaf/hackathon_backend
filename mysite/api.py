@@ -24,6 +24,7 @@ class API(APIView):
             if not serializer.is_valid():
                 return Response(serializer.errors, status=400)
             serialized_entries.append(serializer.data)
+        print("Processed Data: ", serialized_entries)
         result = main(serialized_entries)  #obtain 
         print("Result: ", result)
         # # This handles a GET API call
