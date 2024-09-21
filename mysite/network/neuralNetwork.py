@@ -74,7 +74,7 @@ def main(dayData):
             output = net(torch.tensor(day["x"]))
 
             ## Calculate the loss given the user input
-            loss = criterion(output, day["y"])
+            loss = criterion(output, torch.tensor(day["y"]))
 
             ## Back propagate and update
             loss.backward()
