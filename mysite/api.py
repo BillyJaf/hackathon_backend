@@ -17,11 +17,15 @@ class API(APIView):
         if not health_entries:
             raise ValidationError("No data provided")
             # return Response(status=status.HTTP_400_BAD_REQUEST)
+        print("Input: ", health_entries)
         serialized_entries = []
         for entry in health_entries:
             serializer = HealthEntrySerializer(data=entry)
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=400)
             serialized_entries.append(serializer.data)
         result = main(serialized_entries)  #obtain 
+        print("Result: ", result)
         # # This handles a GET API call
         response_data = {
             'actions': result[0], #list of numbers associated with each action 
