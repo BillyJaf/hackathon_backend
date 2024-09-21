@@ -131,5 +131,5 @@ def main(dayData):
         loss.backward()
         optimiser.step()
 
-    return [inputs.detach(), prediction]
+    return [inputs.detach().squeeze().tolist(), prediction.item()]
 
