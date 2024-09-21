@@ -60,56 +60,49 @@ def main(dayData):
     ## Adam optimisation for stochastic gradient descent
     ## High learning rate on small input size, minimum learning rate of 0.001 (default optim lr)
     ## lr=max(0.1/numDays, 0.001)
-    optimiser = optim.Adam(net.parameters(), lr=0.01)
+    optimiser = optim.Adam(net.parameters(), lr=0.001)
 
     ## Default prediction score
     prediction =  torch.tensor(0.5, dtype=torch.float32)
 
-    ## If there is more than one day of data, predict how the user feels
-    if (numDays > 1): 
+    ## 10000 epochs:
+    for i in range(int(10000/numDays)):
         for day in dayData[:-1]:
-            ## 1000 epochs:
-            for i in range(5000):
-                ## Reset the gradient
-                optimiser.zero_grad()
-
-                ## Run the input values through the net
-                output = net(torch.tensor(day["x"], dtype=torch.float32))
-
-                ## Calculate the loss given the user input
-                loss = criterion(output, torch.tensor([day["y"]], dtype=torch.float32))
-
-                ## Back propagate and update
-                loss.backward()
-                optimiser.step()
-        
-        ## Make a prediction on how you should have felt after your days inputs
-        prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
-
-        ## Now feed the most recent day after this prediction
-        for i in range(5000):
+            ## Reset the gradient
             optimiser.zero_grad()
-            output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
-            loss = criterion(output, torch.tensor([dayData[-1]["y"]], dtype=torch.float32))
+
+            ## Run the input values through the net
+            output = net(torch.tensor(day["x"], dtype=torch.float32)).squeeze()
+
+            ## Calculate the loss given the user input
+            loss = criterion(output, torch.tensor(day["y"], dtype=torch.float32))
+
+            ## Back propagate and update
             loss.backward()
             optimiser.step()
     
-    ## Otherwise, this is the first input, maintain the default prediction of 0.5
-    else:
-        for i in range(5000):
-            optimiser.zero_grad()
-            output = net(torch.tensor(dayData[0]["x"], dtype=torch.float32))
-            loss = criterion(output, torch.tensor([dayData[0]["y"]], dtype=torch.float32))
-            loss.backward()
-            optimiser.step()
+    ## Make a prediction on how you should have felt after your days inputs
+    prediction = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32))
 
+    # for i in range(10000):
+    #     ## Reset the gradient
+    #     optimiser.zero_grad()
 
+    #     ## Run the input values through the net
+    #     output = net(torch.tensor(dayData[-1]["x"], dtype=torch.float32)).squeeze()
+
+    #     ## Calculate the loss given the user input
+    #     loss = criterion(output, torch.tensor(dayData[-1]["y"], dtype=torch.float32))
+
+    #     ## Back propagate and update
+    #     loss.backward()
+    #     optimiser.step()
 
 
     ## Create the inverse model to optimise for the input values:
 
     # Start with random input values:
-    inputs = torch.full((1, inputSize), 0.5, requires_grad=True)
+    inputs = torch.rand((1, inputSize), requires_grad=True)
     # inputs = torch.randn(1, inputSize, requires_grad=True)
 
     # Reset the optimiser with a larger lr (inrelation to the epoch count)
@@ -120,15 +113,15 @@ def main(dayData):
     criterion = torch.nn.MSELoss()
 
      # Target output (1 in our case as we want to maximise)
-    maxOutput = torch.tensor([1], dtype=torch.float32)
+    maxOutput = torch.tensor(1, dtype=torch.float32)
 
-    # Perform optimisation with 10000 epochs
-    for i in range(10000):
+    # Perform optimisation with 1000 epochs
+    for i in range(1000):
         ## Reset the gradient
         optimiser.zero_grad()
 
         ## Run the input values through the net
-        output = net(inputs)
+        output = net(inputs).squeeze()
         
         ## Calculate the loss from the current inputs
         loss = criterion(output, maxOutput)
@@ -137,11 +130,24 @@ def main(dayData):
         loss.backward()
         optimiser.step()
 
-        inputsOutput = inputs.detach().squeeze().tolist()
-        sigmoidOutputs = [sigmoid(x) for x in inputsOutput]
+    inputsOutput = inputs.detach().squeeze().tolist()
+    boundOutputs = [bound(x) for x in inputsOutput]
 
-    return [sigmoidOutputs, prediction.item()]
+    print(inputsOutput)
+    return [boundOutputs, prediction.item()]
 
 def sigmoid(x):
     return 1/(1 + np.exp(-x))
+
+def bound(x):
+    if (x > 1):
+        return 1
+    if (x < 0):
+        return 0
+    return round(x)
+
+def pointwiseAdd(list1, list2):
+    for i in range(len(list1)):
+        list1[i] += list2[i]
+    return list1
 
