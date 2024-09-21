@@ -114,7 +114,7 @@ def main(dayData):
     loss = torch.nn.MSELoss()
 
      # Target output (1 in our case as we want to maximise)
-    max = torch.tensor([1])
+    maxOutput = torch.tensor([1])
 
     # Perform optimisation with 1000 epochs
     for i in range(1000):
@@ -125,7 +125,7 @@ def main(dayData):
         output = net(inputs)
         
         ## Calculate the loss from the current inputs
-        loss = loss(output, max)
+        loss = loss(output, maxOutput)
 
         ## Back propagate and update
         loss.backward()
