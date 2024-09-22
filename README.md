@@ -43,10 +43,12 @@ Following this, a sigmoid function is applied to ensure the output node has a `f
 
 ## Data-Flow:
 
-SkinTune [frontend](https://github.com/BillyJaf/hackathon_frontend) -> Heroku Cloud
-Heroku Cloud -> SkinTune backend
-SkinTune backend -> Heroku Cloud
-Heroku Cloud -> SkinTune [frontend](https://github.com/BillyJaf/hackathon_frontend)
+| Sends    | Receives |
+| -------- | ------- |
+| SkinTune [frontend](https://github.com/BillyJaf/hackathon_frontend)  | Heroku Cloud    |
+| Heroku Cloud | SkinTune backend     |
+| SkinTune backend    | Heroku Cloud    |
+| Heroku Cloud  | SkinTune [frontend](https://github.com/BillyJaf/hackathon_frontend)    |
 
 ## Installation:
 
