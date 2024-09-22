@@ -20,16 +20,16 @@ The network also features a dynamic calculation of epochs (in relation to input 
 The network features:
 10 input nodes, representing the user inputs: 
 ```
-    "cream1": boolean,
-    "cream2": boolean,
-    "tookHotShower": boolean,
-    "relativeHumidity": float,
-    "stress": boolean,
-    "facewash1": boolean,
-    "facewash2": boolean,
-    "makeup": boolean,
-    "soap": boolean,
-    "hoursInside": float
+"cream1": boolean,
+"cream2": boolean,
+"tookHotShower": boolean,
+"relativeHumidity": float,
+"stress": boolean,
+"facewash1": boolean,
+"facewash2": boolean,
+"makeup": boolean,
+"soap": boolean,
+"hoursInside": float
 ```
 
 From this nodes, a rectified linear unit (ReLU) is applied to maintain gradients.
@@ -38,11 +38,15 @@ Following this, a sigmoid function is applied to ensure the output node has a `f
 
 1 output node, representing the predicted skin-feeling:
 ```
-    "skinFeelRating": float
+"skinFeelRating": float
 ```
 
 ## Data-Flow:
 
+SkinTune [frontend](https://github.com/BillyJaf/hackathon_frontend) -> Heroku Cloud
+Heroku Cloud -> SkinTune backend
+SkinTune backend -> Heroku Cloud
+Heroku Cloud -> SkinTune [frontend](https://github.com/BillyJaf/hackathon_frontend)
 
 ## Installation:
 
